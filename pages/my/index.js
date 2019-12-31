@@ -2,9 +2,12 @@ const app = getApp()
 const CONFIG = require('../../config.js')
 const WXAPI = require('apifm-wxapi')
 const AUTH = require('../../utils/auth')
+const TOOLS = require('../../utils/tools.js')
 
 Page({
 	data: {
+    wxlogin: true,
+
     balance:0.00,
     freeze:0,
     score:0,
@@ -29,14 +32,16 @@ Page({
       vipLevel: app.globalData.vipLevel
     })
     AUTH.checkHasLogined().then(isLogined => {
+      this.setData({
+        wxlogin: isLogined
+      })
       if (isLogined) {
-        _this.setData({
-          userInfo: wx.getStorageSync('userInfo')
-        })
         _this.getUserApiInfo();
         _this.getUserAmount();
       }
     })
+    // 获取购物车数据，显示TabBarBadge
+    TOOLS.showTabBarBadge();
   },
   onGotUserInfo(e){
     if (!e.detail.userInfo) {
@@ -47,8 +52,7 @@ Page({
       return;
     }
     if (app.globalData.isConnected) {
-      wx.setStorageSync('userInfo', e.detail.userInfo)
-      AUTH.login(this);
+      AUTH.register(this);
     } else {
       wx.showToast({
         title: '当前无网络',
@@ -73,7 +77,7 @@ Page({
     if (!e.detail.errMsg || e.detail.errMsg != "getPhoneNumber:ok") {
       wx.showModal({
         title: '提示',
-        content: '无法获取手机号码:' + e.detail.errMsg,
+        content: e.detail.errMsg,
         showCancel: false
       })
       return;
@@ -81,7 +85,9 @@ Page({
     var that = this;
     WXAPI.bindMobileWxa(wx.getStorageSync('token'), e.detail.encryptedData, e.detail.iv).then(function (res) {
       if (res.code === 10002) {
-        app.goLoginPageTimeOut()
+        this.setData({
+          wxlogin: false
+        })
         return
       }
       if (res.code == 0) {
@@ -139,5 +145,25 @@ Page({
     wx.navigateTo({
       url: "/pages/order-list/index?type=" + e.currentTarget.dataset.type
     })
-  }
+  },
+  cancelLogin() {
+    this.setData({
+      wxlogin: true
+    })
+  },
+  goLogin() {
+    this.setData({
+      wxlogin: false
+    })
+  },
+  processLogin(e) {
+    if (!e.detail.userInfo) {
+      wx.showToast({
+        title: '已取消',
+        icon: 'none',
+      })
+      return;
+    }
+    AUTH.register(this);
+  },
 })

@@ -1,5 +1,4 @@
 const WXAPI = require('apifm-wxapi')
-const regeneratorRuntime = require('../../utils/runtime')
 //获取应用实例
 var app = getApp()
 Page({
@@ -119,7 +118,6 @@ Page({
     })
   },
   bindSave: function(e) {
-    WXAPI.addTempleMsgFormid(wx.getStorageSync('token'), 'form', e.detail.formId)
     var that = this;
     var linkMan = e.detail.value.linkMan;
     var address = e.detail.value.address;

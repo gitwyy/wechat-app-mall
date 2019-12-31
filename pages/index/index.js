@@ -1,18 +1,17 @@
 const WXAPI = require('apifm-wxapi')
 const CONFIG = require('../../config.js')
+const TOOLS = require('../../utils/tools.js')
+
 //获取应用实例
 var app = getApp()
 Page({
   data: {
-    inputShowed: false, // 是否显示搜索框
     inputVal: "", // 搜索框内容
-    category_box_width: 750, //分类总宽度
     goodsRecommend: [], // 推荐商品
     kanjiaList: [], //砍价商品列表
     pingtuanList: [], //拼团商品列表
 
     loadingHidden: false, // loading
-    userInfo: {},
     selectCurrent: 0,
     categories: [],
     activeCategoryId: 0,
@@ -29,18 +28,9 @@ Page({
   },
 
   tabClick: function(e) {
-    let offset = e.currentTarget.offsetLeft;
-    if (offset > 150) {
-      offset = offset - 150
-    } else {
-      offset = 0;
-    }
-    this.setData({
-      activeCategoryId: e.currentTarget.id,
-      curPage: 1,
-      cateScrollTop: offset
-    });
-    this.getGoodsList(this.data.activeCategoryId);
+    wx.navigateTo({
+      url: '/pages/goods/list?categoryId=' + e.currentTarget.id,
+    })
   },
   toDetailsTap: function(e) {
     wx.navigateTo({
@@ -81,12 +71,12 @@ Page({
      * 调用接口封装方法
      */
     WXAPI.banners({
-      type: 'new'
+      type: 'index'
     }).then(function(res) {
       if (res.code == 700) {
         wx.showModal({
           title: '提示',
-          content: '请在后台添加 banner 轮播图片，自定义类型填写 new',
+          content: '请在后台添加 banner 轮播图片，自定义类型填写 index',
           showCancel: false
         })
       } else {
@@ -100,26 +90,7 @@ Page({
         icon: 'none'
       })
     })
-    WXAPI.goodsCategory().then(function(res) {
-      // let categories = [{
-      //   id: 0,
-      //   icon: '/images/fl.png',
-      //   name: "全部"
-      // }];
-      let categories = [];
-      if (res.code == 0) {
-        categories = categories.concat(res.data)
-      }
-      const _n = Math.ceil(categories.length / 2)
-      // const _n = Math.ceil(categories.length)
-      that.setData({
-        categories: categories,
-        category_box_width: 150 * _n,
-        activeCategoryId: 0,
-        curPage: 1
-      });
-      that.getGoodsList(0);
-    })
+    this.categories()
     WXAPI.goods({
       recommendStatus: 1
     }).then(res => {
@@ -133,6 +104,26 @@ Page({
     that.getNotice()
     that.kanjiaGoods()
     that.pingtuanGoods()
+  },
+  onShow: function(e){
+    // 获取购物车数据，显示TabBarBadge
+    TOOLS.showTabBarBadge();
+  },
+  async categories(){
+    const res = await WXAPI.goodsCategory()
+    let categories = [];
+    if (res.code == 0) {
+      const _categories = res.data.filter(ele => {
+        return ele.level == 1
+      })
+      categories = categories.concat(_categories)
+    }
+    this.setData({
+      categories: categories,
+      activeCategoryId: 0,
+      curPage: 1
+    });
+    this.getGoodsList(0);
   },
   onPageScroll(e) {
     let scrollTop = this.data.scrollTop
@@ -204,12 +195,6 @@ Page({
       }
     })
   },
-  toSearch: function() {
-    this.setData({
-      curPage: 1
-    });
-    this.getGoodsList(this.data.activeCategoryId);
-  },
   onReachBottom: function() {
     this.setData({
       curPage: this.data.curPage + 1
@@ -222,28 +207,6 @@ Page({
     });
     this.getGoodsList(this.data.activeCategoryId)
     wx.stopPullDownRefresh()
-  },
-  // 以下为搜索框事件
-  showInput: function () {
-    this.setData({
-      inputShowed: true
-    });
-  },
-  hideInput: function () {
-    this.setData({
-      inputVal: "",
-      inputShowed: false
-    });
-  },
-  clearInput: function () {
-    this.setData({
-      inputVal: ""
-    });
-  },
-  inputTyping: function (e) {
-    this.setData({
-      inputVal: e.detail.value
-    });
   },
   // 获取砍价商品
   async kanjiaGoods(){
@@ -272,5 +235,18 @@ Page({
         })
       }
     })
-  }
+  },
+  bindinput(e) {
+    this.setData({
+      inputVal: e.detail.value
+    })
+  },
+  bindconfirm(e) {
+    this.setData({
+      inputVal: e.detail.value
+    })
+    wx.navigateTo({
+      url: '/pages/goods/list?name=' + this.data.inputVal,
+    })
+  },
 })

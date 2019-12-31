@@ -1,4 +1,3 @@
-const regeneratorRuntime = require('../../utils/runtime')
 const WXAPI = require('apifm-wxapi')
 Page({
   data: {
@@ -121,7 +120,6 @@ Page({
   },
   async bindSave (e) {
     // 提交保存
-    WXAPI.addTempleMsgFormid(wx.getStorageSync('token'), 'form', e.detail.formId)
     const _this = this;
     // _this.data.orderId
     // _this.data.type

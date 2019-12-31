@@ -1,6 +1,6 @@
 const WXAPI = require('apifm-wxapi')
 let goodsDetail;
-const ctx = wx.createCanvasContext('firstCanvas');
+var ctx;
 const clientWidth = wx.getSystemInfoSync().screenWidth;
 
 function px(number) {
@@ -14,8 +14,7 @@ export default {
     page._saveToMobile = this._saveToMobile;
   },
   _createPoster(e) {
-    goodsDetail = e.currentTarget.dataset.d;
-    console.log(goodsDetail);
+    ctx = wx.createCanvasContext('firstCanvas');
     wx.showLoading({
       title: '正在生成海报',
     });
@@ -46,24 +45,24 @@ export default {
       src: _this.data.goodsDetail.basicInfo.pic,
       success(res) {
 
-        ctx.drawImage(res.path, 0, 0, res.width, res.height, x, y, px(600), px(600))
-        y += px(600)
+        ctx.drawImage(res.path, 0, 0, res.width, res.height, x + px(50), y, px(500), px(500))
+        y += px(500)
 
-        // x = px(300);
-        // y = y + 20;
-        // ctx.setFontSize(14)
-        // ctx.setFillStyle('#333')
-        // ctx.setTextAlign('center')
-        // let name = _this.data.goodsDetail.basicInfo.name
-        // ctx.fillText(name, x, y)
+        x = px(300);
+        y = y + 20;
+        ctx.setFontSize(16)
+        ctx.setFillStyle('#333333')
+        ctx.setTextAlign('center')
+        let name = _this.data.goodsDetail.basicInfo.name
+        ctx.fillText(name, x, y)
 
-        // x = px(300);
-        // y = y + 30;
-        // ctx.setFontSize(12)
-        // ctx.setFillStyle('#ccc')
-        // ctx.setTextAlign('center')
-        // name = wx.getStorageSync('mallName')
-        // ctx.fillText(name, x, y)
+        x = px(300);
+        y = y + 30;
+        ctx.setFontSize(18)
+        ctx.setFillStyle('#e64340')
+        ctx.setTextAlign('center')
+        name = _this.data.goodsDetail.basicInfo.minPrice
+        ctx.fillText('￥' + name, x, y)
         y = y - 20
 
         // 写入二维码

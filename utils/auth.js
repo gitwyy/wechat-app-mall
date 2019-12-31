@@ -1,16 +1,29 @@
 const WXAPI = require('apifm-wxapi')
 
+async function checkSession(){
+  return new Promise((resolve, reject) => {
+    wx.checkSession({
+      success() {
+        return resolve(true)
+      },
+      fail() {
+        return resolve(false)
+      }
+    })
+  })
+}
+
 // 检测登录状态，返回 true / false
 async function checkHasLogined() {
   const token = wx.getStorageSync('token')
   if (!token) {
     return false
   }
-  wx.checkSession({
-    fail() {
-      return false
-    }
-  })
+  const loggined = await checkSession()
+  if (!loggined) {
+    wx.removeStorageSync('token')
+    return false
+  }
   const checkTokenRes = await WXAPI.checkToken(token)
   if (checkTokenRes.code != 0) {
     wx.removeStorageSync('token')
@@ -23,17 +36,17 @@ async function login(page){
   const _this = this
   wx.login({
     success: function (res) {
-      WXAPI.login_wx(res.code).then(function (res) {
+      WXAPI.login_wx(res.code).then(function (res) {        
         if (res.code == 10000) {
           // 去注册
-          _this.register(page)
+          //_this.register(page)
           return;
         }
         if (res.code != 0) {
           // 登录错误
           wx.showModal({
-            title: '错误',
-            content: '无法登录，请重试:' + res.msg,
+            title: '无法登录',
+            content: res.msg,
             showCancel: false
           })
           return;
@@ -80,7 +93,6 @@ async function register(page) {
 function loginOut(){
   wx.removeStorageSync('token')
   wx.removeStorageSync('uid')
-  wx.removeStorageSync('userInfo')
 }
 
 module.exports = {

@@ -2,6 +2,10 @@
   "pages": [
     "pages/start/start",
     "pages/index/index",
+    "pages/notice/index",
+    "pages/notice/show",
+    "pages/category/category",
+    "pages/goods/list",
     "pages/goods-details/index",
     "pages/shop-cart/index",
     "pages/to-pay-order/index",
@@ -11,18 +15,14 @@
     "pages/order-details/index",
     "pages/order/refundApply",
     "pages/wuliu/index",
-    "pages/my/index",
-    "pages/notice/show",
+    "pages/my/index",    
     "pages/recharge/index",
     "pages/withdraw/index",
     "pages/kanjia/index",
-    "pages/authorize/index",
-    "pages/authorize/bindmobile",
     "pages/score-excharge/index",
     "pages/asset/index",
     "pages/score/index",
     "pages/sign/index",
-    "pages/category/category",
     "pages/maidan/index",
     "pages/fx/apply",
     "pages/fx/apply-status",
@@ -53,6 +53,12 @@
         "text": "首页"
       },
       {
+        "pagePath": "pages/category/category",
+        "iconPath": "images/nav/ic_catefory_normal.png",
+        "selectedIconPath": "images/nav/ic_catefory_pressed.png",
+        "text": "分类"
+      },
+      {
         "pagePath": "pages/shop-cart/index",
         "iconPath": "images/nav/cart-off.png",
         "selectedIconPath": "images/nav/cart-on.png",
@@ -69,5 +75,8 @@
   "navigateToMiniProgramAppIdList": [
     "wx56c8f077de74b07c"
   ],
+  "usingComponents": {
+    "float-menu": "/components/float-menu/index"
+  },
   "sitemapLocation": "sitemap.json"
 }

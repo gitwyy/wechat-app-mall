@@ -4,6 +4,12 @@
 
 使用说明和常见问题，可参阅下面的说明，如还有疑问，可访问工厂官网 [https://www.it120.cc/](https://www.it120.cc/) 寻求帮助！
 
+# 今日头条/抖音小程序版本
+
+本项目的今日头条/抖音小程序版本，请移步至下面的地址：
+
+[https://github.com/EastWorld/tt-app-mall](https://github.com/EastWorld/tt-app-mall)
+
 ## 扫码体验
 
 <img src="https://cdn.it120.cc/apifactory/2019/06/28/a8304003-3218-4a47-95cf-84d82ebdc07b.jpg" width="200px">
@@ -31,6 +37,10 @@
 
 - [WeUI](https://github.com/Tencent/weui-wxss/)
 
+底部ICON图标使用：
+https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=13163
+
+
 ## 初始化测试数据
 
 登录后台，左侧菜单 “工厂设置” --> “数据克隆” --> “将别人的数据克隆给我”
@@ -40,25 +50,6 @@
 点击 “立即克隆” ，然后退出后台重新登录
 
 你将立即享有初始化测试数据，方便你进行测试
-
-## 关于分类页面
-
-感谢 @yrx0910 编写并提交了分类页面；
-
-不过新增的分类页面视觉美观度上稍欠缺，所以，项目模块并未开启分类页面；
-
-期待后面可以有朋友协助美化~
-
-如果您先体验分类页面，可以在 app.json 中放开分类底部菜单的入口:
-
-```java
-{
-  "pagePath": "pages/category/category",
-  "iconPath": "images/nav/ic_catefory_normal.png",
-  "selectedIconPath": "images/nav/ic_catefory_pressed.png",
-  "text": "分类"
-}
-```
 
 ## 编译说明
 
@@ -87,18 +78,14 @@ thirdScriptError
 
 ```javascript
 module.exports = {
-  version: "5.0",
-  note: "优化接口调用流程",
-  subDomain: "tz", // 如果你的域名是： https://api.it120.cc/abcd 那么这里只要填写 abcd
+  version: "7.4.0",
+  note: '内页增加快速浮动导航、我的页面UI优化',
+  subDomain: "tz", // 根据教程 https://www.yuque.com/apifm/doc/qr6l4m 查看你自己的 subDomain
   appid: "wxa46b09d413fbcaff", // 您的小程序的appid，购物单功能需要使用
-  shareProfile: "百款精品商品，总有一款适合您" // 首页转发的时候话术
-};
-/*
-根据自己需要修改下单时候的模板消息内容设置，可增加关闭订单、收货时候模板消息提醒；
-1、/pages/to-pay-order/index.js 中已添加关闭订单、商家发货后提醒消费者；
-2、/pages/order-details/index.js 中已添加用户确认收货后提供用户参与评价；评价后提醒消费者好评奖励积分已到账；
-3、请自行修改上面几处的模板消息ID，参数为您自己的变量设置即可。  
-*/
+  shareProfile: '百款精品商品，总有一款适合您', // 首页转发的时候话术
+  kanjiaRequirePlayAd: true, // 是否必须要观看视频广告后才可以砍价
+  goodsDetailSkuShowType: 0, // 0 为点击立即购买按钮后出现规格尺寸、数量的选择； 1为直接在商品详情页面显示规格尺寸、数量的选择，而不弹框
+}
 ```
 
 4、[设置小程序合法服务器域名](https://www.yuque.com/apifm/doc/tvpou9)
@@ -109,10 +96,14 @@ module.exports = {
 
 ```
 这两个功能都是使用后台 “系统设置” --> “banner” 管理功能来实现的；
-后台发布banner的时候，自定义类型请分别填写  app  和  new
+后台发布banner的时候，自定义类型请分别填写  app  和  index
 小程序会自动读取类型为 app 的banner图片作为启动展示图片；
-小程序会自动读取类型为 new 的banner图片作为首页分类下的轮播图；
+小程序会自动读取类型为 index 的banner图片作为首页的轮播图；
 ```
+
+7、订阅消息(以前的模板消息)如何使用？请查阅 “api工厂” 的教程：
+
+[https://www.yuque.com/apifm/doc/sw1dg9](https://www.yuque.com/apifm/doc/sw1dg9)
 
 ## 系统参数设置
 
@@ -222,21 +213,6 @@ module.exports = {
   1. 创建订单接口增加 expireMinutes 参数；
   2. 代表多少分钟未支付自动关闭本订单，传 0 不自动关闭订单；
 
-- 我没有那么多分类，首页2行分类能否改成1行？
-
-  打开 /pages/index/index.js 文件，找到下图所示位置，代码
-
-  ```js
-  // 这行代码为显示2行
-  const _n = Math.ceil(categories.length / 2)
-  // 这行代码为显示1行
-  const _n = Math.ceil(categories.length)
-  ```
-
-  <img src="https://dcdn.it120.cc/2019/09/05/31729239-dc73-47f6-938a-9ab2c9c0bfdd.png">
-
-- [更多问题？](https://www.yuque.com/apifm/doc)
-
 - 如何删除小程序源码中的广告位？
 
   1. 在小程序开发工具中全局搜索关键词: <ad
@@ -248,6 +224,8 @@ module.exports = {
 
   全局搜索并注释掉 console.dir 就好了
 
+- [更多问题？](https://www.yuque.com/apifm/doc)
+  
 ## 如何升级到最新版
 
 - 小程序程序的修改和您后台的数据是独立的，所以不用担心您会丢失数据
