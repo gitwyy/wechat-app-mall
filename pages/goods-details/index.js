@@ -1,7 +1,6 @@
 const WXAPI = require('apifm-wxapi')
 const app = getApp();
-const WxParse = require('../../wxParse/wxParse.js');
-import ApifmShare from '../../template/share/index.js';
+const ApifmShare = require('../../template/share/index.js');
 const CONFIG = require('../../config.js')
 const AUTH = require('../../utils/auth')
 const SelectSizePrefix = "选择："
@@ -45,7 +44,6 @@ Page({
       curuid: wx.getStorageSync('uid')
     })
     this.reputation(e.id)
-    this.initAd()
     this.shippingCartInfo()
   },
   async shippingCartInfo(){
@@ -59,29 +57,6 @@ Page({
         shopNum: res.data.number
       })
     }
-  },
-  initAd(){
-    setTimeout(()=>{
-      // 视频激励广告信息
-      if (wx.createRewardedVideoAd) {
-        videoAd = wx.createRewardedVideoAd({
-          adUnitId: 'adunit-12c4520ad7c062eb'
-        })
-        videoAd.onLoad(() => { })
-        videoAd.onError((err) => { })
-        videoAd.onClose((res) => {
-          if (res && res.isEnded) {
-            that.helpKanjiaDone();
-          } else {
-            wx.showModal({
-              title: '提示',
-              content: '完整观看完视频才能砍价',
-              showCancel: false
-            })
-          }
-        })
-      }
-    }, 500)
   },
   onShow (){
     this.getGoodsDetailAndKanjieInfo(this.data.goodsId)
@@ -140,7 +115,6 @@ Page({
         }        
       }
       that.setData(_data);
-      WxParse.wxParse('article', 'html', goodsDetailRes.data.content, that, 5);
     }
   },
   goShopCar: function() {
@@ -546,22 +520,7 @@ Page({
         wxlogin: isLogined
       })
       if (isLogined) {
-        if (CONFIG.kanjiaRequirePlayAd) {
-          // 显示激励视频广告
-          if (videoAd) {
-            videoAd.show().catch(() => {
-              // 失败重试
-              videoAd.load()
-                .then(() => videoAd.show())
-                .catch(err => {
-                  console.log('激励视频 广告显示失败')
-                })
-            })
-          }
-          return;
-        } else {
-          _this.helpKanjiaDone()
-        }
+        _this.helpKanjiaDone()
       }
     })
   },

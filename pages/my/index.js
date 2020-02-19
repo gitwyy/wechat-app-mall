@@ -11,6 +11,7 @@ Page({
     balance:0.00,
     freeze:0,
     score:0,
+    growth:0,
     score_sign_continuous:0,
     rechargeOpen: false // 是否开启充值[预存]功能
   },
@@ -42,23 +43,6 @@ Page({
     })
     // 获取购物车数据，显示TabBarBadge
     TOOLS.showTabBarBadge();
-  },
-  onGotUserInfo(e){
-    if (!e.detail.userInfo) {
-      wx.showToast({
-        title: '您已取消登录',
-        icon: 'none',
-      })
-      return;
-    }
-    if (app.globalData.isConnected) {
-      AUTH.register(this);
-    } else {
-      wx.showToast({
-        title: '当前无网络',
-        icon: 'none',
-      })
-    }
   },
   aboutUs : function () {
     wx.showModal({
@@ -126,7 +110,8 @@ Page({
         that.setData({
           balance: res.data.balance.toFixed(2),
           freeze: res.data.freeze.toFixed(2),
-          score: res.data.score
+          score: res.data.score,
+          growth: res.data.growth
         });
       }
     })

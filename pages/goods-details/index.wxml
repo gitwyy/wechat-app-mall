@@ -1,11 +1,10 @@
-<import src="../../wxParse/wxParse.wxml" />
 <import src="/template/share/index.wxml" />
 <import src="/template/login/index.wxml" />
 <view class="container">
   <view class="swiper-container" wx:if="{{!goodsDetail.basicInfo.videoId}}">
     <swiper class="swiper_box" indicator-dots="true" indicator-active-color="#fff" autoplay circular>
       <swiper-item wx:for="{{goodsDetail.pics}}" wx:key="id">
-        <image src="{{item.pic}}_m" class="slide-image" mode="aspectFill" lazy-load="true" />
+        <image src="{{item.pic}}" class="slide-image" mode="aspectFill" lazy-load="true" />
       </swiper-item>
     </swiper>
   </view>
@@ -24,7 +23,6 @@
       <template is="apifmShare" />
     </view>    
   </view>
-  <ad unit-id="adunit-b28576e058668589"></ad>
   <view class="page__bd" wx:if="{{curGoodsKanjia}}" style='width:750rpx;'>
     <view class="weui-cells__title">商品砍价设置</view>
     <view class="weui-cells weui-cells_after-title">
@@ -143,7 +141,8 @@
     </view>
   </view>
   <view wx:if="{{hasMoreSelect && goodsDetailSkuShowType==0}}" class="row-arrow" bindtap="bindGuiGeTap">
-    {{selectSize}}
+    <view>{{selectSize}}</view>
+    <image src="/images/icon/next.png"></image>
   </view>
   <view class="size-label-box2" wx:if="{{goodsDetailSkuShowType==1}}">
     <view class="label-title">选择商品规格</view>
@@ -171,7 +170,7 @@
   <view class="goods-des-info">
     <view class="label-title">商品介绍</view>
     <view class="goods-text">
-      <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+      <wxparse data="{{ goodsDetail.content }}"></wxparse>
     </view>
   </view>
   <view class="goods-des-info" style="margin-top:35rpx;" wx:if="{{!curGoodsKanjia && reputation}}">
@@ -207,14 +206,14 @@
   <view class='kjBuyButton' wx:if="{{curGoodsKanjia}}">
     <button class="weui-btn" type="warn" bindtap="tobuy">用当前价购买</button>
   </view>
-  <view wx:if="{{!curGoodsKanjia}}" class="footer-box safeAreaOldPaddingBttom safeAreaNewPaddingBttom">
+  <view wx:if="{{!curGoodsKanjia}}" class="footer-box">
     <view class="contact">
-      <contact-button style="opacity:0;position:absolute;" type="default-dark" session-from="weapp" size="27"></contact-button>
-      <view style='position:absolute;bottom:10rpx;'> 客服 </view>
+      <button type="primary" open-type="contact" />
+      <image src="/images/icon/kf.svg"></image>
     </view>
     <view class="shop-cart-btn" bindtap="goShopCar">
-      <view class="shop-num">({{shopNum}})</view>
-      <view style='position:absolute;bottom:10rpx;'> 购物车 </view>
+      <view class="shop-num">{{shopNum}}</view>
+      <image src="/images/nav/cart-off.png"></image>
     </view>
     <view wx:if="{{!goodsDetail.basicInfo.pingtuan}}" class="join-shop-cart" bindtap="{{goodsDetailSkuShowType==0?'toAddShopCar':'addShopCar'}}">加入购物车</view>
     <view wx:if="{{!goodsDetail.basicInfo.pingtuan}}" class="now-buy"  data-shopType="{{shopType}}" bindtap="{{goodsDetailSkuShowType==0?'tobuy':'buyNow'}}">立即购买</view>
@@ -232,7 +231,7 @@
           <view class="pop-goods-title">{{goodsDetail.basicInfo.name}}</view>
           <view class="pop-goods-price">¥ {{selectSizePrice}}</view>
         </view>
-        <view class="pop-goods-close" bindtap="closePopupTap"></view>
+        <image class="pop-goods-close" src="/images/icon/close0.svg" bindtap="closePopupTap"></image>
       </view>
       <view class="size-label-box">
         <block wx:for="{{goodsDetail.properties}}" wx:for-item="property" wx:for-index="idx" wx:key="id">

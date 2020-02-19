@@ -15,13 +15,14 @@
     "pages/order-details/index",
     "pages/order/refundApply",
     "pages/wuliu/index",
-    "pages/my/index",    
+    "pages/my/index",
     "pages/recharge/index",
     "pages/withdraw/index",
-    "pages/kanjia/index",
     "pages/score-excharge/index",
+    "pages/score-excharge/growth",
     "pages/asset/index",
     "pages/score/index",
+    "pages/score/growth",
     "pages/sign/index",
     "pages/maidan/index",
     "pages/fx/apply",
@@ -75,6 +76,12 @@
   "navigateToMiniProgramAppIdList": [
     "wx56c8f077de74b07c"
   ],
+  "plugins": {
+    "wxparse": {
+      "version": "1.0.10",
+      "provider": "wx5d60c080635009b1"
+    }
+  },
   "usingComponents": {
     "float-menu": "/components/float-menu/index"
   },
